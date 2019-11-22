@@ -1,7 +1,7 @@
 import argparse
 import os
 import tensorflow as tf
-tf.set_random_seed(19)
+tf.compat.v1.set_random_seed(19)
 from model import cyclegan
 
 parser = argparse.ArgumentParser(description='')
@@ -42,12 +42,12 @@ def main(_):
     if not os.path.exists(args.test_dir):
         os.makedirs(args.test_dir)
 
-    tfconfig = tf.ConfigProto(allow_soft_placement=True)
+    tfconfig = tf.compat.v1.ConfigProto(allow_soft_placement=True)
     tfconfig.gpu_options.allow_growth = True
-    with tf.Session(config=tfconfig) as sess:
+    with tf.compat.v1.Session(config=tfconfig) as sess:
         model = cyclegan(sess, args)
         model.train(args) if args.phase == 'train' \
             else model.test(args)
 
 if __name__ == '__main__':
-    tf.app.run()
+    tf.compat.v1.app.run()
