@@ -11,7 +11,7 @@ import copy
 
 pp = pprint.PrettyPrinter()
 
-get_stddev = lambda x, k_h, k_w: 1 / math.sqrt(k_w*k_h*x.get_shape()[-1])
+get_stddev = lambda x, k_h, k_w: 1 / math.sqrt(k_w * k_h * x.get_shape()[-1])
 
 
 class ImagePool(object):
@@ -28,10 +28,10 @@ class ImagePool(object):
             self.num_img += 1
             return image
         if np.random.rand() > 0.5:
-            idx = int(np.random.rand()*self.maxsize)
+            idx = int(np.random.rand() * self.maxsize)
             tmp1 = copy.copy(self.images[idx])[0]
             self.images[idx][0] = image[0]
-            idx = int(np.random.rand()*self.maxsize)
+            idx = int(np.random.rand() * self.maxsize)
             tmp2 = copy.copy(self.images[idx])[1]
             self.images[idx][1] = image[1]
             return [tmp1, tmp2]
@@ -52,10 +52,10 @@ def load_train_data(image_path, load_size=286, fine_size=256, is_testing=False):
     if not is_testing:
         img_A = cv2.resize(img_A, (load_size, load_size))
         img_B = cv2.resize(img_B, (load_size, load_size))
-        h1 = int(np.ceil(np.random.uniform(1e-2, load_size-fine_size)))
-        w1 = int(np.ceil(np.random.uniform(1e-2, load_size-fine_size)))
-        img_A = img_A[h1:h1+fine_size, w1:w1+fine_size]
-        img_B = img_B[h1:h1+fine_size, w1:w1+fine_size]
+        h1 = int(np.ceil(np.random.uniform(1e-2, load_size - fine_size)))
+        w1 = int(np.ceil(np.random.uniform(1e-2, load_size - fine_size)))
+        img_A = img_A[h1 : h1 + fine_size, w1 : w1 + fine_size]
+        img_B = img_B[h1 : h1 + fine_size, w1 : w1 + fine_size]
 
         if np.random.random() > 0.5:
             img_A = np.fliplr(img_A)
@@ -64,8 +64,8 @@ def load_train_data(image_path, load_size=286, fine_size=256, is_testing=False):
         img_A = cv2.resize(img_A, (fine_size, fine_size))
         img_B = cv2.resize(img_B, (fine_size, fine_size))
 
-    img_A = img_A / 127.5 - 1.
-    img_B = img_B / 127.5 - 1.
+    img_A = img_A / 127.5 - 1.0
+    img_B = img_B / 127.5 - 1.0
 
     img_AB = np.concatenate((img_A, img_B), axis=2)
     # img_AB shape: (fine_size, fine_size, input_c_dim + output_c_dim)
@@ -95,7 +95,7 @@ def merge(images, size):
     for idx, image in enumerate(images):
         i = idx % size[1]
         j = idx // size[1]
-        img[j*h:j*h+h, i*w:i*w+w, :] = image
+        img[j * h : j * h + h, i * w : i * w + w, :] = image
 
     return img
 
@@ -105,15 +105,13 @@ def imsave(images, size, path):
     return cv2.imwrite(path, cv2.cvtColor(img.astype(np.uint8), cv2.COLOR_RGB2BGR))
 
 
-def center_crop(x, crop_h, crop_w,
-                resize_h=64, resize_w=64):
-  if crop_w is None:
-    crop_w = crop_h
-  h, w = x.shape[:2]
-  j = int(round((h - crop_h)/2.))
-  i = int(round((w - crop_w)/2.))
-  return cv2.resize(
-      x[j:j+crop_h, i:i+crop_w], (resize_h, resize_w))
+def center_crop(x, crop_h, crop_w, resize_h=64, resize_w=64):
+    if crop_w is None:
+        crop_w = crop_h
+    h, w = x.shape[:2]
+    j = int(round((h - crop_h) / 2.0))
+    i = int(round((w - crop_w) / 2.0))
+    return cv2.resize(x[j : j + crop_h, i : i + crop_w], (resize_h, resize_w))
 
 
 def transform(image, npx=64, is_crop=True, resize_w=64):
