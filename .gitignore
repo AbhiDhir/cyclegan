@@ -6,3 +6,4 @@ datasets/*
 test/*
 sample/*
 *.bat
+*_256/
