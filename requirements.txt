@@ -3,3 +3,4 @@ tensorboard==2.3.0
 tf-slim==1.1.0
 numpy==1.18.5
 opencv-python==4.2.0.34
+tqdm==4.42.1

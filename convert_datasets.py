@@ -1,3 +1,4 @@
+from tqdm import tqdm
 import glob
 import skimage as sk
 from skimage import io, transform, util
@@ -107,7 +108,7 @@ def random_crop(img):
     return img
 
 real_cnt = 0
-for img_fn in glob.iglob(REAL_IMAGE_GLOB):
+for img_fn in tqdm(glob.iglob(REAL_IMAGE_GLOB)):
     json_fn = img_fn.replace(".jpg", ".json").replace("image", "meta")
     with open(json_fn, "r") as f:
         meta = json.loads(f.read())
@@ -128,13 +129,13 @@ for img_fn in glob.iglob(REAL_IMAGE_GLOB):
     img_flip = rotate(img_flip, random.uniform(0, 360))
     img_flip = transform.resize(img_flip, (SIZE, SIZE))
     io.imsave(os.path.join(REAL_OUT_DIR, str(real_cnt).zfill(4) + ".png"), util.img_as_ubyte(img_flip))
-for img_fn in glob.iglob(r"F:\ravenml\datasets\nasa_images_filtered\*.jpg"):
+for img_fn in tqdm(glob.iglob(r"F:\ravenml\datasets\nasa_images_filtered\*.jpg")):
     img_original = io.imread(img_fn)
     real_cnt += 1
     img_norm = transform.resize(img_original, (SIZE, SIZE))
     io.imsave(os.path.join(REAL_OUT_DIR, str(real_cnt).zfill(4) + ".png"), util.img_as_ubyte(img_norm))
 syn_cnt = 0
-for img_fn in glob.iglob(SYN_IMAGE_GLOB):
+for img_fn in tqdm(glob.iglob(SYN_IMAGE_GLOB)):
     json_fn = img_fn.replace(".png", ".json").replace("image", "meta")
     with open(json_fn, "r") as f:
         meta = json.loads(f.read())
